@@ -1,0 +1,36 @@
+﻿@page "/converter"
+<h3>Converter</h3>
+
+<label for="in" >Inches</label>
+<input id="in" @bind="Inches" @bind:event="oninput" type="number" />
+<label for="cm">Centimeters</label>
+<input id="cm" type="number" @bind:event="oninput" @bind="Centimeters" />
+
+@code {
+    double inches = 1; // default value
+    public double Inches
+    {
+        get => inches;
+        set
+        {
+            centimeters = value * 2.54;
+            inches = value;
+        }
+    }
+    double centimeters = 2.54; // default value
+    public double Centimeters
+    {
+        get => centimeters;
+        set
+        {
+            inches = value / 2.54;
+            centimeters = value;
+        }
+    }
+    void UpdateValue(ChangeEventArgs e)
+    {
+        double val = 0; // Failing to parse will set to 0
+        double.TryParse(e.Value.ToString(), out val);
+        inches = val;
+    }
+}

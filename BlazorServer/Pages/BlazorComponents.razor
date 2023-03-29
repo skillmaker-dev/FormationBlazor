@@ -1,0 +1,19 @@
+﻿@inject IJSRuntime js
+@page "/blazorcomponents"
+@using global::BlazorComponents;
+<h3>BlazorComponents</h3>
+
+<BlazorComponents.Component1 />
+<h1>Hello, @message!</h1>
+<button @onclick="ShowPrompt">Show prompt</button>
+
+@code {
+
+    
+    string message = "world";
+    async Task ShowPrompt()
+    {
+        var JsInterop = new ExampleJsInterop(js);
+        message = await JsInterop.Prompt("Say hello:");
+    }
+}

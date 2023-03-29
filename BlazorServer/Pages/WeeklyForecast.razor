@@ -1,0 +1,47 @@
+﻿@page "/weeklyforecast"
+@using BlazorServer.Data;
+@inject WeatherForecastService weatherService
+
+<div class="d-flex">
+    @if(forecasts is null)
+    {
+        <span>Loading...</span>
+    }
+    else
+    {
+        @foreach (var item in forecasts)
+        {
+            <WeatherDay TemperatureC="item.TemperatureC" DayOfWeek="item.Date.DayOfWeek" Summary="@item.Summary" Selected="item.Selected" OnSelected="HandleItemSelected" >
+                <CustomMessage>
+                    @if (item.Summary == "Rainy")
+                    {
+                        <div class="alert alert-danger">
+                            Tornado Warning!
+                        </div>
+                    }
+                </CustomMessage>
+            </WeatherDay>
+        }
+    }
+
+</div>
+
+@code {
+    WeatherForecast[]? forecasts;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await weatherService.GetForecastAsync(DateTime.Now);
+    }
+
+    void HandleItemSelected(DayOfWeek selectedValue)
+    {
+        // Clear selections
+        foreach (var item in forecasts)
+            item.Selected = false;
+
+        var selectedDay = forecasts.First(f => f.Date.DayOfWeek == selectedValue);
+        selectedDay.Selected = true;
+    }
+}

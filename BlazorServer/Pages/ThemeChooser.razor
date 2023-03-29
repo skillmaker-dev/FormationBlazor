@@ -1,0 +1,13 @@
+﻿@inject IJSRuntime js
+ <button @onclick="SwapTheme" class="btn btn-primary mx-2" Primary="true">@SetThemeName Mode</button>
+
+@code {
+ bool isDark = true;
+ string SetThemeName => isDark ? "Dark" : "Light";
+    async Task SwapTheme()
+    {
+        
+        await js.InvokeVoidAsync("themeChooser.setTheme", SetThemeName.ToLower());
+        isDark = !isDark;
+    }
+}
